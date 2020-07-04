@@ -4,7 +4,7 @@ var Test = require('../config/testConfig.js');
 
 contract('ExerciseC6D', async (accounts) => {
 
-  const TEST_ORACLES_COUNT = 2;
+  const TEST_ORACLES_COUNT = 3;
   var config;
   before('setup contract', async () => {
     config = await Test.Config(accounts);
@@ -14,9 +14,9 @@ contract('ExerciseC6D', async (accounts) => {
     let events = config.exerciseC6D.allEvents();
     events.watch((error, result) => {
       if (result.event === 'OracleRequest') {
-        console.log(`\n\nOracle Requested: index: ${result.args.index.toNumber()}, flight:  ${result.args.flight}, timestamp: ${result.args.timestamp.toNumber()}`);
+        console.warn(`\n\nOracle Requested: index: ${result.args.index.toNumber()}, flight:  ${result.args.flight}, timestamp: ${result.args.timestamp.toNumber()}`);
       } else {
-        console.log(`\n\nFlight Status Available: flight: ${result.args.flight}, timestamp: ${result.args.timestamp.toNumber()}, status: ${result.args.status.toNumber() == ON_TIME ? 'ON TIME' : 'DELAYED'}, verified: ${result.args.verified ? 'VERIFIED' : 'UNVERIFIED'}`);
+        console.warn(`\n\nFlight Status Available: flight: ${result.args.flight}, timestamp: ${result.args.timestamp.toNumber()}, status: ${result.args.status.toNumber() == ON_TIME ? 'ON TIME' : 'DELAYED'}, verified: ${result.args.verified ? 'VERIFIED' : 'UNVERIFIED'}`);
       }
     });
 
@@ -36,8 +36,8 @@ contract('ExerciseC6D', async (accounts) => {
     // ACT
     for(let a=1; a<TEST_ORACLES_COUNT; a++) {      
       await config.exerciseC6D.registerOracle({ from: accounts[a], value: fee });
-      let oracle = await config.exerciseC6D.getOracle(accounts[a]);
-      console.log(`Oracle Data ${oracle[0]} ${oracle[1]}`);
+      let oracle = await config.exerciseC6D.getOracle.call(accounts[a]);
+      console.warn(`Oracle Data ${oracle[0]} ${oracle[1]}`);
     }
   });
 
