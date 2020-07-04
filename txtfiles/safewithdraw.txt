@@ -1,0 +1,9 @@
+safeWithdraw(uint256){
+
+    require(mapping[msg.sender] > 100)
+    require(mapping[msg.sender] >= withdraw)
+
+    mapping[msg.sender] = mapping[msg.sender] - value
+
+    
+}
